@@ -63,7 +63,7 @@ func (c *Client) QueryLiveAndUpcoming(channelIds []string) ([]VideoWithChannel, 
 }
 
 func (c *Client) queryVideosRelatedToChannel(channelId string, videoType string) ([]VideoFull, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", APIBaseURL, channelId, videoType), nil)
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/channels/%s/%s", APIBaseURL, channelId, videoType), nil)
 	if err != nil {
 		return []VideoFull{}, err
 	}
