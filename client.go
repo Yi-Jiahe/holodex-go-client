@@ -36,7 +36,7 @@ func (c *Client) makeAuthenticatedRequest(req *http.Request) (*http.Response, er
 func (c *Client) QueryLiveAndUpcoming(channelIds []string) ([]VideoWithChannel, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/users/live", APIBaseURL), nil)
 	if err != nil {
-		return []VideoWithChannel{}, err
+		return nil, err
 	}
 
 	q := req.URL.Query()
@@ -45,18 +45,18 @@ func (c *Client) QueryLiveAndUpcoming(channelIds []string) ([]VideoWithChannel, 
 
 	resp, err := c.makeAuthenticatedRequest(req)
 	if err != nil {
-		return []VideoWithChannel{}, err
+		return nil, err
 	}
 
 	respBodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return []VideoWithChannel{}, err
+		return nil, err
 	}
 
 	var videos []VideoWithChannel
 	err = json.Unmarshal(respBodyBytes, &videos)
 	if err != nil {
-		return []VideoWithChannel{}, err
+		return nil, err
 	}
 
 	return videos, nil
@@ -65,23 +65,23 @@ func (c *Client) QueryLiveAndUpcoming(channelIds []string) ([]VideoWithChannel, 
 func (c *Client) queryVideosRelatedToChannel(channelId string, videoType string) ([]VideoFull, error) {
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/channels/%s/%s", APIBaseURL, channelId, videoType), nil)
 	if err != nil {
-		return []VideoFull{}, err
+		return nil, err
 	}
 
 	resp, err := c.makeAuthenticatedRequest(req)
 	if err != nil {
-		return []VideoFull{}, err
+		return nil, err
 	}
 
 	respBodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return []VideoFull{}, err
+		return nil, err
 	}
 
 	var videos []VideoFull
 	err = json.Unmarshal(respBodyBytes, &videos)
 	if err != nil {
-		return []VideoFull{}, err
+		return nil, err
 	}
 
 	return videos, nil
