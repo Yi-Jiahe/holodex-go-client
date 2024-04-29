@@ -61,3 +61,32 @@ func (c *Client) QueryLiveAndUpcoming(channelIds []string) ([]VideoWithChannel, 
 
 	return videos, nil
 }
+
+func (c *Client) queryVideosRelatedToChannel(channelId string, videoType string) ([]VideoFull, error) {
+	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s/%s", APIBaseURL, channelId, videoType), nil)
+	if err != nil {
+		return []VideoFull{}, err
+	}
+
+	resp, err := c.makeAuthenticatedRequest(req)
+	if err != nil {
+		return []VideoFull{}, err
+	}
+
+	respBodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return []VideoFull{}, err
+	}
+
+	var videos []VideoFull
+	err = json.Unmarshal(respBodyBytes, &videos)
+	if err != nil {
+		return []VideoFull{}, err
+	}
+
+	return videos, nil
+}
+
+func (c *Client) QueryCollabsRelatedToChannel(ChannelId string) ([]VideoFull, error) {
+	return c.queryVideosRelatedToChannel(ChannelId, "collabs")
+}
